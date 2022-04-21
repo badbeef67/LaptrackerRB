@@ -22,12 +22,3 @@ Specify the race duration in laps. By default, the duration is set to '0' which 
 Starting a race will display all registered racers names and telemetry. Pre-race no telemetry will be on screen. Once the racers key is pressed, the race starts for that racer and all telemetry will be '0'. Subsequent laps will be counted and lap times tracked. Fast times are displayed for that racer. Once the duration of the race is reached, racer telemetry for that specific racer is no longer tracked. Remaining racers can continue the race up to the specified duration.
 
 The code architecture has attempted to comply with Model-View-Controller concepts. I'm a self-thought programmer with little experience so please be gentle with my imperfect implementation. Feedback or contributions welcome!
-
-Requested features:
-    race duration: minutes
-    telemetry: add lockout delay to lap time to avoid accidental double tap
-    telemetry: add metric length and speed
-    race summary: save to file or database
-    series championship: points system
-    package: wrap into single executable
-    architecture: Rails this puppy! (or gtk3)
