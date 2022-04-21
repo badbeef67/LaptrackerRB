@@ -95,7 +95,7 @@ class Mainmenu
                     @racecontrol.race_pause
                     sleep(0.25) until STDIN.getch == "p"
                 when key_match == true
-                    @racecontrol.add_lap(char) if @racecontrol.race_remaining_laps(char)
+                    @racecontrol.add_lap(char) if @racecontrol.race_remaining(char)
                 else
                     racer = @racecontrol.add_racer(char,char)
                     @racecontrol.add_lap(char)
