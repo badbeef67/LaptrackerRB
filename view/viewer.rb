@@ -79,45 +79,43 @@ class Viewer
         printf(sep)
     end
 
-    def print_race_start(racers)
+    def print_race_start(racers, flag)
         self.print_race_header
         racers.sort_by! {|racer| racer.name}
         racers.each {|racer| printf("| %10.10s | %10.10s | %10.10s | %10.10s || %10.10s | %10.10s ||\n", racer.name, " ", " ", " ", " ", " ") }
-        self.print_race_footer('race')
+        self.print_race_footer('race', flag)
     end
 
-    def print_race_pause(racers)
+    def print_race_pause(racers, flag)
+        self.print_race_header
+        racers.sort_by! {|racer| [racer.telemetry.lc,-racer.telemetry.lstart * -1]}.reverse!
+        racers.each {|racer| printf("| %10.10s | %10.10s | %10.10s | %10.10s || %10.10s | %10.10s ||\n", racer.name, racer.telemetry.lc, racer.telemetry.lt, racer.telemetry.mph, racer.telemetry.ft,racer.telemetry.fmph) }
+        self.print_race_footer('pause', flag)
+    end
+
+    def print_race(racers, flag)
         self.print_race_header
         racers.sort_by! {|racer| [racer.telemetry.lc,racer.telemetry.lstart * -1]}.reverse!
         racers.each {|racer| printf("| %10.10s | %10.10s | %10.10s | %10.10s || %10.10s | %10.10s ||\n", racer.name, racer.telemetry.lc, racer.telemetry.lt, racer.telemetry.mph, racer.telemetry.ft,racer.telemetry.fmph) }
-        self.print_race_footer('pause')
+        self.print_race_footer('running', flag)
     end
 
-    def print_race(racers)
-        self.print_race_header
-        racers.sort_by! {|racer| [racer.telemetry.lc,racer.telemetry.lstart * -1]}.reverse!
-        racers.each {|racer| printf("| %10.10s | %10.10s | %10.10s | %10.10s || %10.10s | %10.10s ||\n", racer.name, racer.telemetry.lc, racer.telemetry.lt, racer.telemetry.mph, racer.telemetry.ft,racer.telemetry.fmph) }
-        self.print_race_footer('race')
-    end
-
-    def print_race_winner(racers)
-        self.print_race_header
-        racers.sort_by! {|racer| [racer.telemetry.lc,racer.telemetry.lstart * -1]}.reverse!
-        racers.each {|racer| printf("| %10.10s | %10.10s | %10.10s | %10.10s || %10.10s | %10.10s ||\n", racer.name, racer.telemetry.lc, racer.telemetry.lt, racer.telemetry.mph, racer.telemetry.ft,racer.telemetry.fmph) }
-        self.print_race_footer('winner', "#{racers[0]}")
-    end
+    #def print_race_winner(racers,flag)
+    #    self.print_race_header
+    #    racers.sort_by! {|racer| [racer.telemetry.lc,racer.telemetry.lstart * -1]}.reverse!
+    #    racers.each {|racer| printf("| %10.10s | %10.10s | %10.10s | %10.10s || %10.10s | %10.10s ||\n", racer.name, racer.telemetry.lc, racer.telemetry.lt, racer.telemetry.mph, racer.telemetry.ft,racer.telemetry.fmph) }
+    #    self.print_race_footer('winner', flag)
+    #end
     
-    def print_race_footer(update)
+    def print_race_footer(update,flag)
         sep = "+-#{'-'*10}-+-#{'-'*10}-+-#{'-'*10}-+-#{'-'*10}-++-#{'-'*10}-+-#{'-'*10}-++\n"
         printf(sep)
+        printf("Flag: #{flag}")
         case update
-            when "race"
-                printf("Press 'q' to exit or 'p' to pause:")
+            when "running"
+                printf("\nPress 'q' to exit or 'p' to pause:")
             when "pause"
                 printf("\n\nRace paused! Press 'p' to unpause")
-            when "winner"
-                printf("\n\n#{racers[0].name} won! \nPress 'q' to exit or 'p' to pause")
         end
     end
-
 end

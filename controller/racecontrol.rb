@@ -97,28 +97,45 @@ class RaceControl
         @racers.select {|racer| racer.key == char}.empty? ? false : true
     end
 
-    def race_remaining_laps(char)
-        return true if @race.duration_laps == 0
+    def race_remaining(char)
         racer = @racers.select {|racer| racer.key == char}[0]
-        racer.telemetry.lc < @race.duration_laps ? true : false
-    end
-
-    def race_winner
-        @viewer.print_race_winner(@racers)
+        if @race.duration_minutes == nil
+            unless racer.telemetry.lc < @race.duration_laps
+                false
+            else
+                true
+            end
+        elsif @race.duration_laps == nil
+            unless racer.telemetry.lstart < @race.endmono
+                false
+            else
+                true
+            end
+        end
     end
 
     def race_start
         @race.set_start_time
-        @viewer.print_race_start(@racers)
+        @viewer.print_race_start(@racers, @race.flag)
     end
 
     def race_pause
-        @viewer.print_race_pause(@racers)
+        @race.flag = "Yellow"
+        @viewer.print_race_pause(@racers, @race.flag)
+    end
+
+    def set_race_flag
+        @racers.sort_by! {|racer| [racer.telemetry.lc,-racer.telemetry.lstart * -1]}.reverse!
+        if @race.duration_minutes == nil
+            @racers[0].telemetry.lc < @race.duration_laps ? @race.flag = "Green" : @race.flag = "Checkered"   
+        elsif @race.duration_laps == nil
+            @racers[0].telemetry.lstart < @race.endmono ? @race.flag = "Green" : @race.flag = "Checkered"
+        end
     end
 
     def race_update
-        #check here for race_durations
-        @viewer.print_race(@racers)
+        self.set_race_flag
+        @viewer.print_race(@racers, @race.flag)
     end
 
     def new_telemetry

@@ -7,12 +7,12 @@ class Telemetry
         @ft = 0
         @mph = 0
         @fmph = 0
-        #some arbitrary large number for sorting
-        @lstart = 2**64
+        @lstart = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        @firstlap = @lstart
     end
 
     def add_lap(track)
-        if @lstart == 2**64
+        if @lstart == @firstlap
             @lstart = Process.clock_gettime(Process::CLOCK_MONOTONIC)
         else
             @lc += 1
